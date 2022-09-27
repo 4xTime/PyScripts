@@ -62,6 +62,6 @@ if Answer == 2:
     print("How much data do you want")
     HowMuchData = int(input("->"))
     print("What name and extansion do you want (for example DATA.csv)")
-    print("you can change path to file (example C:\Users\myuser\DATA.csv)")
+    print("you can change path to file (example C:\\Users\\myuser\\DATA.csv)")
     PathName = input("->")
     GenerateRandomDATA(HowMuchData,PathName)
