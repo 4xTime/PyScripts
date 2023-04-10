@@ -3,6 +3,9 @@ import sys
 from pydub import AudioSegment
 import os
 import time
+import string
+
+special_chars = ('$', '%', '^', '&', '*','_', '=', '+', '[', ']', '{', '}', ';', ':', '|', '\\','<', '>', '/', '?', '`', '~','"')
 
 def remove_first_dot(str):
     if str[0] == '.':
@@ -15,6 +18,13 @@ def check_sys_argv(string):
         return sys.argv.index(string)
     else:
         return -1
+
+def search_special_chars_in_filename_and_remove(Filename):
+    #special_chars = string.punctuation  
+    for char in Filename:
+        if char in special_chars:
+            Filename = Filename.replace(char, '')
+    return Filename
 
 def ConvertToAudio(I_Filename,I_Format,FromURL):
     if FromURL == False:
@@ -52,6 +62,8 @@ def Download(I_link):
     Filename = youtubeObject.title + ".mp4"
     Filename = Filename.replace(" ","")
 
+    Filename = search_special_chars_in_filename_and_remove(Filename)
+
     youtubeObject = youtubeObject.streams.get_highest_resolution()
     try:
         youtubeObject.download(filename=Filename)
@@ -69,5 +81,9 @@ if check_sys_argv("--URL") != -1:
     ConvertToAudio(Filename,check_sys_argv("--Format"),True)
 
 if check_sys_argv("--DEL") != -1:
-    os.remove(Filename)
+    try:
+        os.remove(Filename)
+    except:
+        print("Cannot delete a file")
+    print("File successfully deleted")
 
