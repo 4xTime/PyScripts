@@ -1,10 +1,23 @@
+from csv import excel_tab
+from gc import is_finalized
 import os
 import glob
 import pathlib
 import shutil
 import sys
 
-dir_for_yolo_sorted_data = os.getcwd()+"/"+"YoloReadyToTrain"
+dir_for_yolo_sorted_data = os.getcwd()+"\\"+"YoloReadyToTrain"
+
+def create_custom_yaml_file():
+    if not os.path.isfile(dir_for_yolo_sorted_data+"/"+"custom.yaml"):
+        with open(dir_for_yolo_sorted_data+"/"+"custom.yaml","w") as file:
+            file.write("train: " + dir_for_yolo_sorted_data+"\\images\\train" + "\n")
+            file.write("val: " +dir_for_yolo_sorted_data+"\\images\\val" + "\n")
+            file.write("test: " +dir_for_yolo_sorted_data+"\\images\\test" + "\n")
+            file.write("#Classes\n")
+            file.write("nc: 1 #number of classes\n")
+            file.write("#Classes names\n")
+            file.write("names: ['your_class']\n")
 
 def create_folders_if_not_exits(PATH):
     if os.path.exists(PATH):
@@ -21,23 +34,19 @@ def check_if_dirs_exist():
     current_path = os.getcwd()
     create_folders_if_not_exits(dir_for_yolo_sorted_data)
 
-    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/train")
+    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/images")
+    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/images/train")
+    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/images/val")
+    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/images/test")
 
-    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/train/images")
-    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/train/lables")
+    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/labels")
+    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/labels/train")
+    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/labels/val")
+    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/labels/test")
 
-    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/test")
-
-    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/test/images")
-    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/test/lables")
-
-    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/valid")
-
-    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/valid/images")
-    create_folders_if_not_exits(dir_for_yolo_sorted_data+"/valid/lables")
-    return [current_path+"/YoloReadyToTrain/train/images"
-            ,current_path+"/YoloReadyToTrain/test/images"
-            ,current_path+"/YoloReadyToTrain/valid/images"]
+    return [current_path+"/YoloReadyToTrain/images/train"
+            ,current_path+"/YoloReadyToTrain/images/val"
+            ,current_path+"/YoloReadyToTrain/images/test"]
 
 def get_numbers_of_data_from_dataset(PATH):
     img_extensions = ["*.jpg","*.jpeg","*.png"]
@@ -158,17 +167,27 @@ def move_random_file_to_dataset_dir(src_path,dst_path,list_of_data_amount):
     loda = list_of_data_amount
     for x in range((loda[0] + loda[1] + loda[2])):
         for a in range(loda[0]):
-            random_file = next(os.scandir(src_path))
-            file_extension = pathlib.Path(random_file.name).suffix
-            shutil.move(src_path+"/"+random_file.name,dst_path[0]+'/'+str(a)+file_extension)
+            try:
+                random_file = next(os.scandir(src_path))
+                file_extension = pathlib.Path(random_file.name).suffix
+                shutil.move(src_path+"/"+random_file.name,dst_path[0]+'/'+str(a)+file_extension)
+            except StopIteration:
+                break;
         for b in range(loda[1]):
-            random_file = next(os.scandir(src_path))
-            file_extension = pathlib.Path(random_file.name).suffix
-            shutil.move(src_path+"/"+random_file.name,dst_path[1]+'/'+str(b)+file_extension)
+            try:
+                random_file = next(os.scandir(src_path))
+                file_extension = pathlib.Path(random_file.name).suffix
+                shutil.move(src_path+"/"+random_file.name,dst_path[1]+'/'+str(b)+file_extension)
+            except StopIteration:
+                break;
         for c in range(loda[2]):
-            random_file = next(os.scandir(src_path))
-            file_extension = pathlib.Path(random_file.name).suffix
-            shutil.move(src_path+"/"+random_file.name,dst_path[2]+'/'+str(c)+file_extension)
+            try:
+                random_file = next(os.scandir(src_path))
+                file_extension = pathlib.Path(random_file.name).suffix
+                shutil.move(src_path+"/"+random_file.name,dst_path[2]+'/'+str(c)+file_extension)
+            except StopIteration:
+                break;
+
 
 
 print("I:train|T:test|V:valid")
@@ -186,3 +205,4 @@ print(f"I:{list_of_data_amount[0]},T:{list_of_data_amount[1]},V:{list_of_data_am
 
 list_of_created_dirs = check_if_dirs_exist()
 move_random_file_to_dataset_dir(sys.argv[1],list_of_created_dirs,list_of_data_amount)
+create_custom_yaml_file()

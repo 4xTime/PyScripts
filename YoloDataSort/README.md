@@ -1,50 +1,60 @@
+
 # YOLO Data Preparation Script
 
-This script helps in preparing data for training a YOLO (You Only Look Once) object detection model. It organizes the dataset into train, test, and validation sets, and moves the image files accordingly.
+This Python script is designed to help you organize and split your image data for training a YOLO (You Only Look Once) object detection model. The script creates the necessary folder structure, splits the data into train, test, and validation sets, and generates a custom YAML file for YOLO configuration.
 
 ## Prerequisites
 
-- Python 3.x
+Before running the script, ensure you have the following:
+
+- Python 3.x installed on your system.
+- A directory containing your image dataset.
+
+## Getting Started
+
+1. Clone this repository or download the script `YoloDataSort.py` to your local machine.
+
+2. Place your image dataset in a separate directory.
 
 ## Usage
 
-1. Place your dataset in the desired directory.
-2. Run the script with the following command:
+To use the script, follow these steps:
 
-python data_preparation_script.py <dataset_directory_path>
+1. Open a terminal or command prompt.
 
+2. Navigate to the directory where the `YoloDataSort.py` script is located.
 
-3. Select the desired image distribution for the train, test, and validation sets.
-- Option 0: 50% train, 25% test, 25% validation (default)
-- Option 1: 25% train, 25% test, 50% validation
-- Option 2: Custom distribution (enter the number of images for each set)
+3. Run the script with the path to your image dataset as a command-line argument:
 
-4. The script will create the necessary folders and move the images accordingly.
+   ```bash
+   python YoloDataSort.py /path/to/your/image/dataset
 
-## Folder Structure
+    The script will prompt you to choose between preset data splits or provide custom values for train, test, and validation sets. Select an option based on your requirements.
 
-After running the script, the folder structure will be as follows:
+    The script will create the required folder structure inside a folder called YoloReadyToTrain in the current working directory.
 
-YoloReadyToTrain
-├── train
-│ ├── images
-│ └── labels
-├── test
-│ ├── images
-│ └── labels
-└── valid
-├── images
-└── labels
+    The images will be randomly moved to their respective train, test, and validation folders according to the chosen data split.
 
-- The `train/images` folder contains images for training.
-- The `test/images` folder contains images for testing.
-- The `valid/images` folder contains images for validation.
-- The `labels` folders are currently empty and can be used for storing annotation files if needed.
+    A custom YAML file named custom.yaml will be generated inside the YoloReadyToTrain folder. This file contains the paths to the train, validation, and test folders, as well as the number of classes and class names. You should edit this file to match your specific class names and number of classes.
 
-## Contributing
+Data Split Options
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+    Option 0: I: 50% / T: 25% / V: 25%
+    Option 1: I: 25% / T: 25% / V: 50%
+    Option 2: Custom - You can specify the number of images for each category (train, test, and validation).
 
-## License
+Note
 
-This project is licensed under the [MIT License](LICENSE).
+    The script assumes that your image files have extensions .jpg, .jpeg, or .png. Ensure your images are properly formatted with these extensions.
+
+    If the number of images specified in custom input exceeds the available images in the dataset, the script will automatically adjust the splits to fit the available data.
+
+    Make sure to review the generated custom.yaml file and update the class names according to your dataset.
+
+Contributing
+
+If you find any issues with the script or have suggestions for improvement, feel free to open an issue or submit a pull request.
+
+License
+
+This project is licensed under the MIT License.
