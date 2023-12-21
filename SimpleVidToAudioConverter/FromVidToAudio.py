@@ -1,9 +1,10 @@
-from pytube import YouTube
+import pytube
 import sys
 from pydub import AudioSegment
 import os
 import time
 import string
+pytube.innertube._default_clients['ANDROID']=pytube.innertube._default_clients['WEB']
 
 special_chars = ('$', '%', '^', '&', '*','_', '=', '+', '[', ']', '{', '}', ';', ':', '|', '\\','<', '>', '/', '?', '`', '~','"')
 
@@ -56,8 +57,7 @@ def Download(I_link):
     if I_link == -1:
          raise ValueError("You miss a flag for --URL or --ConvertFile")
     link = sys.argv[I_link+1]
-
-    youtubeObject = YouTube(link)
+    youtubeObject = pytube.YouTube(link)
 
     Filename = youtubeObject.title + ".mp4"
     Filename = Filename.replace(" ","")
@@ -69,21 +69,45 @@ def Download(I_link):
         youtubeObject.download(filename=Filename)
     except:
         print("An error has occurred")
-    print("Download is completed successfully")
+    print("Video Download is completed successfully")
     return Filename
 
-
-if check_sys_argv("--ConvertFile") != -1:
-    ConvertToAudio(check_sys_argv("--ConvertFile"),check_sys_argv("--Format"),False)
+def DownloadOnlyAudio(I_link,I_format):
+    if I_link == -1:
+        raise ValueError("You miss a flag for --URL")
+    if I_format == -1:
+        raise ValueError("You miss a flag for --Format")
     
-if check_sys_argv("--URL") != -1:
-    Filename = Download(check_sys_argv("--URL"))
-    ConvertToAudio(Filename,check_sys_argv("--Format"),True)
 
-if check_sys_argv("--DEL") != -1:
+    link = sys.argv[I_link+1]
+    format = remove_first_dot(str(sys.argv[I_format+1].replace(" ","")))
+
+    youtubeObject = pytube.YouTube(link)
+
+    Filename = youtubeObject.title +"."+format
+    Filename = Filename.replace(" ", "")
+
+    # You may add a function to handle special characters in the filename here
+
+    audioStream = youtubeObject.streams.filter(only_audio=True).first()
     try:
-        os.remove(Filename)
+        audioStream.download(filename=Filename)
     except:
-        print("Cannot delete a file")
-    print("File successfully deleted")
+        print("An error has occurred during download.")
+        return None
+    
+    print("Audio download completed successfully")
 
+
+if check_sys_argv("--VIDEO") == -1 and check_sys_argv("--ConvertFile")==-1:
+    try:
+        DownloadOnlyAudio(check_sys_argv("--URL"),check_sys_argv("--Format"))
+    except:
+        print("An error has occurred during TRY_AUDIO.")
+else:
+    if check_sys_argv("--ConvertFile") != -1:
+        ConvertToAudio(check_sys_argv("--ConvertFile"),check_sys_argv("--Format"),False)
+        
+    if check_sys_argv("--URL") != -1:
+        Filename = Download(check_sys_argv("--URL"))
+        ConvertToAudio(Filename,check_sys_argv("--Format"),True)
