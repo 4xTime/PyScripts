@@ -2,13 +2,19 @@
 
 # Audio Converter from YouTube Video
 
-This is a Python program that can download YouTube videos and convert them into audio files. The program can be run from the command line with the following command:
+This is a Python program that can download audio and videos files from YouTube video files will convert into audio files. The program can be run from the command line with the following command:
 
 ```python
 python FromVidToAudio.py --URL <youtube-video-url> --Format <audio-format>
 ```
 
-This will download the video from the specified YouTube URL, convert it to the specified audio format, and save the resulting audio file in the same directory as the program. 
+This will download the audio from the specified YouTube URL,save the resulting audio file in the same directory as the program. 
+
+You can also download a video file that will be converted to audio (the video file will be saved in the same directory as the program, along with the audio).
+
+```python
+python FromVidToAudio.py --URL <youtube-video-url> --Format <audio-format> --VIDEO
+````
 
 Alternatively, the program can also convert an existing video file on your local machine to an audio file with the following command:
 
@@ -58,8 +64,8 @@ To convert an existing video file to an ogg audio file:
 python FromVidToAudio.py --ConvertFile /path/to/video.mp4 --Format ogg
 ```
 
-To download and convert a YouTube video to a wav audio file, and then delete the downloaded video:
+To download a video file from a YouTube video and convert it to an audio file:
 
 ```
-python FromVidToAudio.py --URL https://www.youtube.com/watch?v=dQw4w9WgXcQ --Format wav --DEL
+python FromVidToAudio.py --URL https://www.youtube.com/watch?v=dQw4w9WgXcQ --Format wav --VIDEO
 ```
