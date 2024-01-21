@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Bot Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Create Event</h2>
+        <form method="POST" action="{{ url_for('create_event') }}">
+            <div class="form-group">
+                <label for="nazwa-eventu">Event Name:</label>
+                <input type="text" id="nazwa-eventu" name="nazwa-eventu" required>
+            </div>
+            <div class="form-group">
+                <label for="opis-eventu">Event Description:</label>
+                <input type="text" id="opis-eventu" name="opis-eventu" required>
+            </div>
+            <div class="form-group">
+                <label for="czas-do-wygasniecia">Expiration Time (in hours):</label>
+                <input type="number" id="czas-do-wygasniecia" name="czas-do-wygasniecia" required>
+            </div>
+            <button type="submit">Publish</button>
+        </form>
+    </div>
+</body>
+</html>
